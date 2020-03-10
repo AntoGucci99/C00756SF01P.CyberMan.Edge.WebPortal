@@ -84,6 +84,7 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
 
             return CreatedAtAction("GetStatus", new { id = status.Id }, status);
         }    
+        //commento test
 
         // DELETE: api/Status/5
         [HttpDelete("{id}")]
