@@ -83,7 +83,7 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetStatus", new { id = status.Id }, status);
-        }
+        }    
 
         // DELETE: api/Status/5
         [HttpDelete("{id}")]
