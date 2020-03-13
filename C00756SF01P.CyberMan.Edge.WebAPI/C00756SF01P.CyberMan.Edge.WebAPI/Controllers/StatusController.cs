@@ -19,34 +19,44 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
         }
         // GET: api/StatusControllerr
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<Status> Get()
         {
-            return new string[] { "value1", "value2" };
+            return isp.GetAll();
         }
 
         // GET: api/StatusControllerr/5
         [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        public Status Get(int id)
         {
-            return "value";
+            return isp.GetByID(id);
         }
 
         // POST: api/StatusControllerr
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] Status status)
         {
+            isp.Insert(status);
         }
 
         // PUT: api/StatusControllerr/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(int id, [FromBody] Status status)
         {
+            if (id == status.Id)
+            {
+                isp.Update(status);
+            }else
+            {
+                BadRequest();
+            }
+            
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            isp.Delete(id);
         }
     }
 }
