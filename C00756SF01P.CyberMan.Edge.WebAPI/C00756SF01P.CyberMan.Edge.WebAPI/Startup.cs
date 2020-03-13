@@ -12,6 +12,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
+using C00756SF01P.CyberMan.Edge.WebAPI.Repository;
+using C00756SF01P.CyberMan.Edge.WebAPI.Repository.C00756SF01P.CyberMan.Edge.WebAPI.Repository;
 
 namespace C00756SF01P.CyberMan.Edge.WebAPI
 {
@@ -27,6 +29,7 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -34,6 +37,8 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI
             });
             services.AddDbContext<AppContext>(opt =>
                opt.UseInMemoryDatabase("TodoList"));
+            services.AddScoped<IStatusRepository, StatusRepository>();
+            services.AddMemoryCache();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

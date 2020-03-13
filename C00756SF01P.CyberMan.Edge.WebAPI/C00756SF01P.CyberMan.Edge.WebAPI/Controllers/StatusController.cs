@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using C00756SF01P.CyberMan.Edge.WebAPI.Repository.C00756SF01P.CyberMan.Edge.WebAPI.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using C00756SF01P.CyberMan.Edge.WebAPI;
 
 namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
 {
@@ -13,98 +12,41 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
     [ApiController]
     public class StatusController : ControllerBase
     {
-        private readonly AppContext _context;
-
-        public StatusController(AppContext context)
+        private IStatusRepository isp;
+        public StatusController(IStatusRepository isp)
         {
-            _context = context;
+            this.isp = isp;
         }
-
-        // GET: api/Status
+        // GET: api/StatusControllerr
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Status>>> GetStatuses()
+        public IEnumerable<string> Get()
         {
-            return await _context.Statuses.ToListAsync();
+            return new string[] { "value1", "value2" };
         }
 
-        // GET: api/Status/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Status>> GetStatus(int id)
+        // GET: api/StatusControllerr/5
+        [HttpGet("{id}", Name = "Get")]
+        public string Get(int id)
         {
-            var status = await _context.Statuses.FindAsync(id);
-
-            if (status == null)
-            {
-                return NotFound();
-            }
-
-            return status;
+            return "value";
         }
 
-        // PUT: api/Status/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutStatus(int id, Status status)
-        {
-            if (id != status.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(status).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!StatusExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Status
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
+        // POST: api/StatusControllerr
         [HttpPost]
-        public async Task<ActionResult<Status>> PostStatus(Status status)
+        public void Post([FromBody] string value)
         {
-            _context.Statuses.Add(status);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetStatus", new { id = status.Id }, status);
-        }    
-        //commento test
-
-        // DELETE: api/Status/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Status>> DeleteStatus(int id)
-        {
-            var status = await _context.Statuses.FindAsync(id);
-            if (status == null)
-            {
-                return NotFound();
-            }
-
-            _context.Statuses.Remove(status);
-            await _context.SaveChangesAsync();
-
-            return status;
         }
 
-        private bool StatusExists(int id)
+        // PUT: api/StatusControllerr/5
+        [HttpPut("{id}")]
+        public void Put(int id, [FromBody] string value)
         {
-            return _context.Statuses.Any(e => e.Id == id);
+        }
+
+        // DELETE: api/ApiWithActions/5
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+        {
         }
     }
 }
