@@ -12,5 +12,6 @@
     <_SelectedScaffolderID>ApiControllerWithContextScaffolder</_SelectedScaffolderID>
     <_SelectedScaffolderCategoryPath>root/Common</_SelectedScaffolderCategoryPath>
     <WebStackScaffolding_DbContextTypeFullName>C00756SF01P.CyberMan.Edge.WebAPI.AppContext</WebStackScaffolding_DbContextTypeFullName>
+    <NameOfLastUsedPublishProfile>C00756SF01PCyberManEdgeWebAPI20200316022515 - Web Deploy</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>

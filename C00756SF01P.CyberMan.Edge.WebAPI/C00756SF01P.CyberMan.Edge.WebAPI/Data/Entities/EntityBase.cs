@@ -9,6 +9,6 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Data.Entities
     {
         public int Id { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime MidifiedAt { get; set; }
+        public DateTime ModifiedAt { get; set; }
     }
 }

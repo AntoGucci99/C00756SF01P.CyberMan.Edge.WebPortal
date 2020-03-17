@@ -36,7 +36,7 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
             });
             services.AddDbContext<AppContext>(opt =>
-               opt.UseInMemoryDatabase("TodoList"));
+               opt.UseSqlServer("Server=tcp:smartfactory001.database.windows.net,1433;Initial Catalog=smarfactory-sql-001;Persist Security Info=False;User ID=admingio001;Password=antonucci001!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"));           
             services.AddScoped<IStatusRepository, StatusRepository>();
             services.AddMemoryCache();
         }

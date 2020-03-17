@@ -15,5 +15,6 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Repository
         void Insert(TEntity entity);
         void Update(TEntity entityToUpdate);
         void Delete(int id);
+        void SaveAll();
     }
 }

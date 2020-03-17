@@ -12,30 +12,30 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
     [ApiController]
     public class StatusController : ControllerBase
     {
-        private IStatusRepository isp;
-        public StatusController(IStatusRepository isp)
+        private IStatusRepository IRepositoryStatus;
+        public StatusController(IStatusRepository IRepositoryStatus)
         {
-            this.isp = isp;
+            this.IRepositoryStatus = IRepositoryStatus;
         }
         // GET: api/StatusControllerr
         [HttpGet]
         public IEnumerable<Status> Get()
         {
-            return isp.GetAll();
+            return IRepositoryStatus.GetAll();
         }
 
         // GET: api/StatusControllerr/5
         [HttpGet("{id}", Name = "Get")]
         public Status Get(int id)
         {
-            return isp.GetByID(id);
+            return IRepositoryStatus.GetByID(id);
         }
-
         // POST: api/StatusControllerr
         [HttpPost]
         public void Post([FromBody] Status status)
         {
-            isp.Insert(status);
+            IRepositoryStatus.Insert(status);
+            IRepositoryStatus.SaveAll();
         }
 
         // PUT: api/StatusControllerr/5
@@ -44,8 +44,10 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
         {
             if (id == status.Id)
             {
-                isp.Update(status);
-            }else
+                IRepositoryStatus.Update(status);  
+                IRepositoryStatus.SaveAll();
+            }
+            else
             {
                 BadRequest();
             }
@@ -56,7 +58,8 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            isp.Delete(id);
+            IRepositoryStatus.Delete(id);
+            IRepositoryStatus.SaveAll();
         }
     }
 }

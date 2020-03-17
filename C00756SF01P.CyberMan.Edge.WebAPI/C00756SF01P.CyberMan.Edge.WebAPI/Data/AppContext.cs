@@ -10,6 +10,8 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI
         public AppContext(DbContextOptions<AppContext> options)
           : base(options)
         {
+
+            Database.EnsureCreated();
         }
         //public AppContext CreateDbContext(string[] args)
         //{
