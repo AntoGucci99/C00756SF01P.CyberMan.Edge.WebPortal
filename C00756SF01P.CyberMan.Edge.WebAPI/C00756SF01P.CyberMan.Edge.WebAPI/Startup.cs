@@ -29,21 +29,23 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
             });
             services.AddDbContext<AppContext>(opt =>
-               opt.UseSqlServer("Server=tcp:smartfactory001.database.windows.net,1433;Initial Catalog=smarfactory-sql-001;Persist Security Info=False;User ID=admingio001;Password=antonucci001!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"));           
-            services.AddScoped<IStatusRepository, StatusRepository>();
+               opt.UseSqlServer(Configuration.GetConnectionString("Connection")));
+            services.AddScoped<UnitOfWork>();
+
             services.AddMemoryCache();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,AppContext context)
         {
+            context.Database.Migrate();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

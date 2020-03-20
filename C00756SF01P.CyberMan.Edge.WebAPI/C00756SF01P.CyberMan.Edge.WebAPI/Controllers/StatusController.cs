@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using C00756SF01P.CyberMan.Edge.WebAPI.Repository;
 using C00756SF01P.CyberMan.Edge.WebAPI.Repository.C00756SF01P.CyberMan.Edge.WebAPI.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
+using System.Web;
 
 namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
 {
@@ -12,40 +15,49 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
     [ApiController]
     public class StatusController : ControllerBase
     {
-        private IStatusRepository IRepositoryStatus;
-        public StatusController(IStatusRepository IRepositoryStatus)
+        public UnitOfWork UnitOfWork { get; set; }
+        public StatusController(UnitOfWork unit)
         {
-            this.IRepositoryStatus = IRepositoryStatus;
+            this.UnitOfWork = unit;
         }
+        //public StatusController()
+        //{
+        //    UnitOfWork = new StatusRepository(new AppContext());
+        //}
+        //public StatusController(IStatusRepository IStatusRepository)
+        //{
+        //    UnitOfWork = IStatusRepository;
+        //}
+
         // GET: api/StatusControllerr
         [HttpGet]
-        public IEnumerable<Status> Get()
+        public IEnumerable<Status> GetStatues()
         {
-            return IRepositoryStatus.GetAll();
+            return UnitOfWork.StatusRepository.GetAll();
         }
 
         // GET: api/StatusControllerr/5
-        [HttpGet("{id}", Name = "Get")]
-        public Status Get(int id)
+        [HttpGet("{id}", Name = "GetByIdStatus")]
+        public Status GetByIdStatus(int id)
         {
-            return IRepositoryStatus.GetByID(id);
+            return UnitOfWork.StatusRepository.GetByID(id);
         }
         // POST: api/StatusControllerr
         [HttpPost]
-        public void Post([FromBody] Status status)
+        public void PostStatus([FromBody] Status status)
         {
-            IRepositoryStatus.Insert(status);
-            IRepositoryStatus.SaveAll();
+            UnitOfWork.StatusRepository.Insert(status);
+            UnitOfWork.StatusRepository.SaveAll();
         }
 
         // PUT: api/StatusControllerr/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Status status)
+        public void PutStatus(int id, [FromBody] Status status)
         {
             if (id == status.Id)
             {
-                IRepositoryStatus.Update(status);  
-                IRepositoryStatus.SaveAll();
+                UnitOfWork.StatusRepository.Update(status);
+                UnitOfWork.StatusRepository.SaveAll();
             }
             else
             {
@@ -56,10 +68,10 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void DeleteStatus(int id)
         {
-            IRepositoryStatus.Delete(id);
-            IRepositoryStatus.SaveAll();
+            UnitOfWork.StatusRepository.Delete(id);
+            UnitOfWork.StatusRepository.SaveAll();
         }
     }
 }

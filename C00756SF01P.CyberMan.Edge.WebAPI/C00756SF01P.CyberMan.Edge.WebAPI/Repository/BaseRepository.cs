@@ -9,18 +9,19 @@ using System.Linq.Expressions;
 namespace C00756SF01P.CyberMan.Edge.WebAPI.Repository
 {
 
-
+    
     public class BaseRepository<TEntity> : IRepository<TEntity> where TEntity : EntityBase
     {
-        private readonly DbContext context;
+        private readonly AppContext context;
 
         public DbSet<TEntity> Set { get; }
 
-        public BaseRepository(DbContext context)
+        public BaseRepository(AppContext context)
         {
             //Set.AsNoTracking();
-            Set = context.Set<TEntity>();
             this.context = context;
+            Set = context.Set<TEntity>();
+            
         }
 
         public void Delete(int id)

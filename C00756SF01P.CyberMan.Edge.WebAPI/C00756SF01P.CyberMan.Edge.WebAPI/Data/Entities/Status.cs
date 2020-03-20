@@ -8,8 +8,12 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI
 {
     public class Status : EntityBase
     {
-        public string NameStatus { get; set; }
+        public string StatusName { get; set; }
         public string StatusCurrent { get; set; }
+        public int MachineId { get; set; }
+        public Machine Machine { get; set; }
+        //public int AlertId { get; set; }
+        //public int MachineId {get; set;}
 
     }
 }
