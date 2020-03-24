@@ -61,6 +61,11 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
         {
             return await UnitOfWork.AlertRepository.GetAlertByIDMachine(id);
         }
+        [HttpGet("{idMachine2}", Name = "GetByIdAlertByIdMachine")]
+        public async Task<Alert> GetLastAlertByIdMachine(int id)
+        {
+            return await UnitOfWork.AlertRepository.GetLastAlertByIDMachine(id);
+        }
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public void DeleteAlert(int id)
