@@ -62,5 +62,6 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
             UnitOfWork.MachineRepository.Delete(id);
             UnitOfWork.MachineRepository.SaveAll();
         }
+
     }
 }

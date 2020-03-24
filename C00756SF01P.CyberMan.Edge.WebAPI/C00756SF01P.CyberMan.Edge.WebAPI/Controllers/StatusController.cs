@@ -6,11 +6,10 @@ using C00756SF01P.CyberMan.Edge.WebAPI.Repository;
 using C00756SF01P.CyberMan.Edge.WebAPI.Repository.C00756SF01P.CyberMan.Edge.WebAPI.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
-using System.Web;
 
 namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
 {
+
     [Route("api/[controller]")]
     [ApiController]
     public class StatusController : ControllerBase
@@ -20,16 +19,8 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
         {
             this.UnitOfWork = unit;
         }
-        //public StatusController()
-        //{
-        //    UnitOfWork = new StatusRepository(new AppContext());
-        //}
-        //public StatusController(IStatusRepository IStatusRepository)
-        //{
-        //    UnitOfWork = IStatusRepository;
-        //}
 
-        // GET: api/StatusControllerr
+
         [HttpGet]
         public IEnumerable<Status> GetStatues()
         {
@@ -37,10 +28,20 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
         }
 
         // GET: api/StatusControllerr/5
-        [HttpGet("{id}", Name = "GetByIdStatus")]
+        [HttpGet("statusid/{id}", Name = "GetStatusById")]
         public Status GetByIdStatus(int id)
         {
             return UnitOfWork.StatusRepository.GetByID(id);
+        }
+        [HttpGet("machineid/{id}", Name = "GetStatusByMachineID")]
+        public async Task<List<Status>> GetStatusByIdMachine(int id)
+        {
+            return await UnitOfWork.StatusRepository.GetStatusByIDMachine(id);
+        }
+        [HttpGet("laststatudbymachineid/{id}", Name = "GetLastStatusByMachineId")]
+        public async Task<Status> GetLastStatusByIDMachine(int id)
+        {
+            return await UnitOfWork.StatusRepository.GetLastStatusByIDMachine(id);
         }
         // POST: api/StatusControllerr
         [HttpPost]
@@ -63,7 +64,7 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
             {
                 BadRequest();
             }
-            
+
         }
 
         // DELETE: api/ApiWithActions/5
@@ -74,4 +75,5 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
             UnitOfWork.StatusRepository.SaveAll();
         }
     }
+
 }

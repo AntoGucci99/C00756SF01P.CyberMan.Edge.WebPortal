@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using C00756SF01P.CyberMan.Edge.WebAPI.Repository;
 using C00756SF01P.CyberMan.Edge.WebAPI.Repository.C00756SF01P.CyberMan.Edge.WebAPI.Repository;
 
+
 namespace C00756SF01P.CyberMan.Edge.WebAPI
 {
     public class Startup
@@ -46,21 +47,55 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env,AppContext context)
         {
             context.Database.Migrate();
-            if (env.IsDevelopment())
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //}
+
+            //app.UseSwaggerUI(c =>
+            //{
+            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+
+            //});
+            //app.UseHttpsRedirection();
+
+            //app.UseRouting();
+
+            //app.UseAuthorization();
+
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapControllers();
+            //});
+              if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
             app.UseSwagger();
+
+ 
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
                 c.RoutePrefix = string.Empty;
+
+ 
+
             });
             app.UseHttpsRedirection();
 
+ 
+
             app.UseRouting();
 
+ 
+
             app.UseAuthorization();
+
+ 
 
             app.UseEndpoints(endpoints =>
             {

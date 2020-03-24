@@ -9,5 +9,7 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Repository
 {
     interface IMachineRepository: IRepository<Data.Entities.Machine>
     {
+        
+       
     }
 }

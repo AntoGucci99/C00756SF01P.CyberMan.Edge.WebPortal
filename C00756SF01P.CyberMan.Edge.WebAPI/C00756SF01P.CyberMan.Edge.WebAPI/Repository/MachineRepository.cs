@@ -15,5 +15,5 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Repository
         {
             Context = context;
         }
-    }
+}
 }

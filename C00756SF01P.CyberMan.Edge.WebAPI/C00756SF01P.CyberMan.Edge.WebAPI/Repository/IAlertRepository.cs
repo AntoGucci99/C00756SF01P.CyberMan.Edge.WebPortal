@@ -8,5 +8,7 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Repository
 {
     interface IAlertRepository:IRepository<Alert>
     {
+        public Task<List<Alert>> GetAlertByIDMachine(int id);
+        public Task<Alert> GetLastAlertByIDMachine(int id);
     }
 }

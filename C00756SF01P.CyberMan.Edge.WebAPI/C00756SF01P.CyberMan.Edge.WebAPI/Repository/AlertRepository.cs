@@ -1,5 +1,9 @@
 ﻿using C00756SF01P.CyberMan.Edge.WebAPI.Data.Entities;
+using C00756SF01P.CyberMan.Edge.WebAPI.Repository.C00756SF01P.CyberMan.Edge.WebAPI.Repository;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,5 +19,24 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Repository
         {
             Context = context;
         }
+        
+
+        public async Task<List<Alert>> GetAlertByIDMachine(int id)
+        {
+            return await this.Context.Alerts.Where(p => p.MachineId == id).ToListAsync();
+         
+        }
+        public async Task<Alert> GetLastAlertByIDMachine(int id)
+        {
+            var query = from alert in Context.Set<Alert>()
+                        join machine in Context.Set<Machine>()
+                           on alert.MachineId equals machine.Id
+                        where machine.Id == id
+                        select alert;
+
+            return await query.OrderByDescending(o => o.ModifiedAt).FirstOrDefaultAsync();
+        }
+
+
     }
 }
