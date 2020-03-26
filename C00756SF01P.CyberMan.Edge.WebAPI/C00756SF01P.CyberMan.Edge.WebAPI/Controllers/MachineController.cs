@@ -27,40 +27,78 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
 
         // GET: api/Machine/5
         [HttpGet("{id}", Name = "GetMachineById")]
-        public Machine GetMachineById(int id)
+        public ActionResult<Machine> GetMachineById(int id)
         {
-            return UnitOfWork.MachineRepository.GetByID(id);
+            try
+            {
+                var result = UnitOfWork.MachineRepository.GetByID(id);
+                if (result.IsDeleted == true)
+                {
+                    return BadRequest("La macchina inserita è stata eliminata e non puoi piu vederla");
+                }
+                return result;
+            }
+            catch (Exception)
+            {
+                return BadRequest("La macchina inserita non esiste");
+            }
+             
         }
 
         // POST: api/Machine
         [HttpPost]
-        public void PostMachine([FromBody] Machine machine)
+        public ActionResult PostMachine([FromBody] Machine machine)
         {
-            UnitOfWork.MachineRepository.Insert(machine);
-            UnitOfWork.MachineRepository.SaveAll();
-        }
+            try
+            {
+                UnitOfWork.MachineRepository.Insert(machine);
+                UnitOfWork.MachineRepository.SaveAll();
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("impossibile fare insert");
+            }
 
+        }
         // PUT: api/Machine/5
         [HttpPut("{id}")]
-        public void PutMachine(int id, [FromBody] Machine machine)
+        public ActionResult PutMachine(int id, [FromBody] Machine machine)
         {
             if (id == machine.Id)
             {
-                UnitOfWork.MachineRepository.Update(machine);
-                UnitOfWork.MachineRepository.SaveAll();
+                try
+                {
+                    UnitOfWork.MachineRepository.Update(machine);
+                    UnitOfWork.MachineRepository.SaveAll();
+                    return Ok();
+                }
+                catch (Exception)
+                {
+                    return BadRequest("impossibile aggiornare");
+                }               
             }
             else
             {
-                BadRequest();
+                BadRequest("Non puoi cambiare l'id");
             }
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void DeleteMachine(int id)
+        public ActionResult DeleteMachine(int id)
         {
-            UnitOfWork.MachineRepository.Delete(id);
-            UnitOfWork.MachineRepository.SaveAll();
+            try
+            {
+                UnitOfWork.MachineRepository.Delete(id);
+                UnitOfWork.MachineRepository.SaveAll();
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Impossibile eliminare,non esiste o altro problema");
+            }
+            
         }
 
     }

@@ -28,17 +28,19 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Repository
         {
             //Set.AsNoTracking();
             var entity = Set.SingleOrDefault(x => x.Id == id);
-            Set.Remove(entity);
+            entity.IsDeleted = true;
         }
         public IEnumerable<TEntity> GetAll()
         {
-            return Set.AsNoTracking().ToList();
+             return Set.AsNoTracking().Where(x => x.IsDeleted == false).ToList();
+            
         }
 
         public TEntity GetByID(int id)
         {
             //Set.AsNoTracking();
-            return Set.SingleOrDefault(x => x.Id == id);
+            var result= Set.SingleOrDefault(x => x.Id == id);
+            return result;
         }
 
         public void Insert(TEntity entity)

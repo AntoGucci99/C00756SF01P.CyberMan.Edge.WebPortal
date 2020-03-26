@@ -27,51 +27,109 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
 
         // GET: api/Alert/5
         [HttpGet("{id}", Name = "GetByIdAlert")]
-        public Alert GetByIdAlert(int id)
+        public ActionResult<Alert> GetByIdAlert(int id)
         {
-            return UnitOfWork.AlertRepository.GetByID(id);
+            try
+            {
+                var result = UnitOfWork.AlertRepository.GetByID(id);
+                if (result.IsDeleted == true)
+                {
+                    return BadRequest("Alesrt inserito è stato eliminato e non puoi piu vederlo");
+                }
+                return result;
+            }
+            catch (Exception)
+            {
+                return BadRequest("Alert inserito non esiste");
+            }
+            
         }
 
         // POST: api/Alert
         [HttpPost]
-        public void PostAlert([FromBody] Alert alert)
+        public ActionResult PostAlert([FromBody] Alert alert)
         {
-            UnitOfWork.AlertRepository.Insert(alert);
-            UnitOfWork.AlertRepository.SaveAll();
+            try
+            {
+                UnitOfWork.AlertRepository.Insert(alert);
+                UnitOfWork.AlertRepository.SaveAll();
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("impossibile Inserire");
+            }
         }
 
         // PUT: api/Alert/5
         [HttpPut("{id}")]
-        public void PutAlert(int id, [FromBody] Alert alert)
+        public ActionResult PutAlert(int id, [FromBody] Alert alert)
         {
             if (id == alert.Id)
             {
-                UnitOfWork.AlertRepository.Update(alert);
-                UnitOfWork.AlertRepository.SaveAll();
+                try
+                {
+                    UnitOfWork.AlertRepository.Update(alert);
+                    UnitOfWork.AlertRepository.SaveAll();
+                    return Ok();
+                }
+                catch (Exception)
+                {
+                    return BadRequest("impossibile aggiornare");
+                }
+
             }
             else
             {
-                BadRequest();
+                return BadRequest("non puoi cambiare l'id dello stato");
             }
-
         }
         // GET: api/Alert/8
         [HttpGet("{idMachine}", Name = "GetByIdAlertByIdMachine")]
-        public async Task<List<Alert>> GetAlertByIdMachine(int id)
+        public  ActionResult<Task<List<Alert>>> GetAlertByIdMachine(int id)
         {
-            return await UnitOfWork.AlertRepository.GetAlertByIDMachine(id);
+            try
+            {
+                var result = UnitOfWork.AlertRepository.GetByID(id);
+                if (result.IsDeleted == true)
+                {
+                    return BadRequest("Alert inserito è stato eliminato e non puoi piu vederlo");
+                }
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return BadRequest("Alert inserito non esiste");
+            }
         }
-        [HttpGet("{idMachine2}", Name = "GetByIdAlertByIdMachine")]
-        public async Task<Alert> GetLastAlertByIdMachine(int id)
+        [HttpGet("{idMachine2}", Name = "GetIdAlertByIdMachine")]
+        public ActionResult<Task<Alert>> GetLastAlertByIdMachine(int id)
         {
-            return await UnitOfWork.AlertRepository.GetLastAlertByIDMachine(id);
+            var result = UnitOfWork.AlertRepository.GetAlertByIDMachine(id);
+            if (result == null)
+            {
+                return BadRequest("idMacchina inseistente o alert inesistenti in questa macchina");
+            }
+            else
+            {
+                return Ok(result);
+            }
         }
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void DeleteAlert(int id)
+        public ActionResult DeleteAlert(int id)
         {
-            UnitOfWork.AlertRepository.Delete(id);
-            UnitOfWork.AlertRepository.SaveAll();
+            try
+            {
+                UnitOfWork.AlertRepository.Delete(id);
+                UnitOfWork.AlertRepository.SaveAll();
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Impossibile eliminare,non esiste o altro problema");
+            }
+            
         }
     }
 }

@@ -21,7 +21,8 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Repository
         }
         public async Task<List<Status>> GetStatusByIDMachine(int id)
         {
-            return await Set.Where(x => x.MachineId == id).ToListAsync();
+            var list1 = Set.Where(x => x.MachineId == id);
+            return await list1.Where(x => x.IsDeleted== false).ToListAsync();
         }
 
 
