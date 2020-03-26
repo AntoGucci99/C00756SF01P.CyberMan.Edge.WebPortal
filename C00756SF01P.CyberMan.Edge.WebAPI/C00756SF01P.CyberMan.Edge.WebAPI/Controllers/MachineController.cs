@@ -20,85 +20,54 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
         }
         // GET: api/Machine
         [HttpGet]
-        public IEnumerable<Machine> GetMachine()
+        public ActionResult<IEnumerable<Machine>> GetMachine()
         {
-            return UnitOfWork.MachineRepository.GetAll();
+            return Ok(UnitOfWork.MachineRepository.GetAll());
         }
 
         // GET: api/Machine/5
         [HttpGet("{id}", Name = "GetMachineById")]
         public ActionResult<Machine> GetMachineById(int id)
         {
-            try
+            var result = UnitOfWork.MachineRepository.GetByID(id);
+            if (result.IsDeleted)
             {
-                var result = UnitOfWork.MachineRepository.GetByID(id);
-                if (result.IsDeleted == true)
-                {
-                    return BadRequest("La macchina inserita è stata eliminata e non puoi piu vederla");
-                }
-                return result;
+                //TODO:COMMENTO IN INGLESE
+                return BadRequest("La macchina inserita è stata eliminata e non puoi piu vederla");
             }
-            catch (Exception)
-            {
-                return BadRequest("La macchina inserita non esiste");
-            }
-             
+            return result;
         }
 
         // POST: api/Machine
         [HttpPost]
         public ActionResult PostMachine([FromBody] Machine machine)
         {
-            try
-            {
-                UnitOfWork.MachineRepository.Insert(machine);
-                UnitOfWork.MachineRepository.SaveAll();
-                return Ok();
-            }
-            catch (Exception)
-            {
-                return BadRequest("impossibile fare insert");
-            }
+
+            var insertMachine=UnitOfWork.MachineRepository.Insert(machine);
+            UnitOfWork.MachineRepository.SaveAll();
+            //TODO: RITORNARE L'OGGETTO MACHINE CHE è APPENA STATO INSERITO
+            return Ok(insertMachine);
+
 
         }
         // PUT: api/Machine/5
         [HttpPut("{id}")]
-        public ActionResult PutMachine(int id, [FromBody] Machine machine)
+        public ActionResult PutMachine([FromBody] Machine machine)
         {
-            if (id == machine.Id)
-            {
-                try
-                {
-                    UnitOfWork.MachineRepository.Update(machine);
-                    UnitOfWork.MachineRepository.SaveAll();
-                    return Ok();
-                }
-                catch (Exception)
-                {
-                    return BadRequest("impossibile aggiornare");
-                }               
-            }
-            else
-            {
-                BadRequest("Non puoi cambiare l'id");
-            }
+            //TODO: TORNARE LA MACCHINE AGGIORNATA
+            var machineUpdate=UnitOfWork.MachineRepository.Update(machine);
+            UnitOfWork.MachineRepository.SaveAll();
+            return Ok(machineUpdate);
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public ActionResult DeleteMachine(int id)
         {
-            try
-            {
-                UnitOfWork.MachineRepository.Delete(id);
-                UnitOfWork.MachineRepository.SaveAll();
-                return Ok();
-            }
-            catch (Exception)
-            {
-                return BadRequest("Impossibile eliminare,non esiste o altro problema");
-            }
-            
+
+            var machineDeleted=UnitOfWork.MachineRepository.Delete(id);
+            UnitOfWork.MachineRepository.SaveAll();
+            return Ok(machineDeleted);
         }
 
     }

@@ -11,10 +11,10 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Repository
     public interface IRepository<TEntity> where TEntity : EntityBase
     {        
         IEnumerable<TEntity> GetAll();            
-        TEntity GetByID(int id);      
-        void Insert(TEntity entity);
-        void Update(TEntity entityToUpdate);
-        void Delete(int id);
+        TEntity GetByID(int id);
+        TEntity Insert(TEntity entity);
+        TEntity Update(TEntity entityToUpdate);
+        TEntity Delete(int id);
         void SaveAll();
     }
 }

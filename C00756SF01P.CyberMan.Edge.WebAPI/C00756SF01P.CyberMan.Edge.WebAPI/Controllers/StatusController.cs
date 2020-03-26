@@ -34,46 +34,38 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
         // GET: api/StatusControllerr/5
         [HttpGet("statusid/{id}", Name = "GetStatusById")]
         public ActionResult<Status> GetByIdStatus(int id)
-        {
-            try
-            {
+        {           
                 var result = UnitOfWork.StatusRepository.GetByID(id);
                 if (result.IsDeleted == true)
                 {
-                    return BadRequest("lo status inserito è stato eliminato e non puoi piu vederlo");
+                    return BadRequest("lo status inserit is deleted and you can access it");
                 }
                 return result;
-            }
-            catch (Exception)
-            {
-                return BadRequest("Lo Status inserito non esiste");
-            }
-         
         }
 
         [HttpGet("machineid/{id}", Name = "GetStatusByMachineID")]
         //metodo con await e async
-        public  ActionResult<Task<List<Status>>> GetStatusByIdMachine(int id)
+        public async Task<ActionResult<List<Status>>> GetStatusByIdMachine(int id)
         {
-            var result= UnitOfWork.StatusRepository.GetStatusByIDMachine(id);
+            var result = await UnitOfWork.StatusRepository.GetStatusByIDMachine(id);
             if (result == null)
             {
-                return BadRequest("idMacchina inseistente o stati inesistenti in questa macchina");
+                return BadRequest("idMacchina not exists or not have statuses");
             }
             else
             {
                 return Ok(result);
             }
-            
+
         }
         [HttpGet("laststatudbymachineid/{id}", Name = "GetLastStatusByMachineId")]
         //metodo con await e async
-        public  ActionResult<Task<Status>> GetLastStatusByIDMachine(int id)
+        public ActionResult<Task<Status>> GetLastStatusByIDMachine(int id)
         {
-            var result =  UnitOfWork.StatusRepository.GetLastStatusByIDMachine(id);
-            if ( result== null)
+            var result = UnitOfWork.StatusRepository.GetLastStatusByIDMachine(id);
+            if (result == null)
             {
-                return BadRequest("idMacchina non esiste o non ha stati");
+                return BadRequest("idMacchina not exists or not have status");
             }
             else
             {
@@ -82,67 +74,39 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
 
         }
         [HttpGet("StatusName")]
-        public async Task<List<string>> GetStatusName()
+        public async Task<ActionResult<List<string>>> GetStatusName()
         {
-            return await UnitOfWork.StatusRepository.GetNameStatus();
+            return Ok(await UnitOfWork.StatusRepository.GetNameStatus());
         }
         // POST: api/StatusControllerr
         [HttpPost]
-        public ActionResult PostStatus([FromBody] Status status)
+        public ActionResult<Status> PostStatus([FromBody] Status status)
         {
-            try
-            {
-                UnitOfWork.StatusRepository.Insert(status);
+                var statusInsert=UnitOfWork.StatusRepository.Insert(status);
                 UnitOfWork.StatusRepository.SaveAll();
-                return Ok();
-            }
-            catch (Exception)
-            {
-                return BadRequest("impossibile Inserire");
-            }
+                return Ok(statusInsert);
         }
 
         // PUT: api/StatusControllerr/5
         [HttpPut("{id}")]
-        public ActionResult PutStatus(int id, [FromBody] Status status)
+        public ActionResult<Status> PutStatus([FromBody] Status status)
         {
-            if (id == status.Id)
-            {
-                try
-                {
-                    UnitOfWork.StatusRepository.Update(status);
-                    UnitOfWork.StatusRepository.SaveAll();
-                    return Ok();
-                }
-                catch (Exception)
-                {
-                    return BadRequest("impossibile aggiornare");
-                }
-                
-            }
-            else
-            {
-                return BadRequest("non puoi cambiare l'id dello stato");
-            }
 
+               var statusUpdate=UnitOfWork.StatusRepository.Update(status);
+               UnitOfWork.StatusRepository.SaveAll();
+               return Ok(statusUpdate);
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public ActionResult DeleteStatus(int id)
+        public ActionResult<Status> DeleteStatus(int id)
         {
-            try
-            {
-                UnitOfWork.StatusRepository.Delete(id);
-                UnitOfWork.StatusRepository.SaveAll();
-                return Ok();
-            }
-            catch (Exception)
-            {
-                return BadRequest("Impossibile eliminare lo stato,o non esiste o c'è stato un'altro problema");
-            }
+            var statusDeleted = UnitOfWork.StatusRepository.Delete(id);
+            UnitOfWork.StatusRepository.SaveAll();
+            return Ok(statusDeleted);
 
-}
+
+        }
     }
 
 }

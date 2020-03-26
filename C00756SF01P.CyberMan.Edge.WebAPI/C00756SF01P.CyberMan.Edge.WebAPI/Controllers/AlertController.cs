@@ -20,87 +20,56 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
         }
         // GET: api/Alert
         [HttpGet]
-        public IEnumerable<Alert> GetAlerts()
+        public ActionResult<Task<IEnumerable<Alert>>> GetAlerts()
         {
-            return UnitOfWork.AlertRepository.GetAll();
+            var alertList = UnitOfWork.AlertRepository.GetAll();
+            return Ok(alertList);
         }
 
         // GET: api/Alert/5
         [HttpGet("{id}", Name = "GetByIdAlert")]
         public ActionResult<Alert> GetByIdAlert(int id)
         {
-            try
-            {
-                var result = UnitOfWork.AlertRepository.GetByID(id);
-                if (result.IsDeleted == true)
-                {
-                    return BadRequest("Alesrt inserito è stato eliminato e non puoi piu vederlo");
-                }
-                return result;
-            }
-            catch (Exception)
-            {
-                return BadRequest("Alert inserito non esiste");
-            }
             
+            var result = UnitOfWork.AlertRepository.GetByID(id);
+            if (result.IsDeleted == true)
+            {
+               return BadRequest("Alert inserit is deleted and you can't access it");
+            }
+            return Ok(result);  
         }
 
         // POST: api/Alert
         [HttpPost]
-        public ActionResult PostAlert([FromBody] Alert alert)
+        public ActionResult<Alert> PostAlert([FromBody] Alert alert)
         {
-            try
-            {
-                UnitOfWork.AlertRepository.Insert(alert);
+                var alertInsert=UnitOfWork.AlertRepository.Insert(alert);
                 UnitOfWork.AlertRepository.SaveAll();
-                return Ok();
-            }
-            catch (Exception)
-            {
-                return BadRequest("impossibile Inserire");
-            }
+                return Ok(alertInsert);
         }
 
         // PUT: api/Alert/5
         [HttpPut("{id}")]
-        public ActionResult PutAlert(int id, [FromBody] Alert alert)
+        public ActionResult<Alert> PutAlert([FromBody] Alert alert)
         {
-            if (id == alert.Id)
-            {
-                try
-                {
-                    UnitOfWork.AlertRepository.Update(alert);
-                    UnitOfWork.AlertRepository.SaveAll();
-                    return Ok();
-                }
-                catch (Exception)
-                {
-                    return BadRequest("impossibile aggiornare");
-                }
+             var alertUpdate=UnitOfWork.AlertRepository.Update(alert);
+             UnitOfWork.AlertRepository.SaveAll();
+             return Ok(alertUpdate);
 
-            }
-            else
-            {
-                return BadRequest("non puoi cambiare l'id dello stato");
-            }
         }
         // GET: api/Alert/8
         [HttpGet("{idMachine}", Name = "GetByIdAlertByIdMachine")]
         public  ActionResult<Task<List<Alert>>> GetAlertByIdMachine(int id)
         {
-            try
-            {
+            
                 var result = UnitOfWork.AlertRepository.GetByID(id);
                 if (result.IsDeleted == true)
                 {
-                    return BadRequest("Alert inserito è stato eliminato e non puoi piu vederlo");
+                    return BadRequest("the machine not exists or not have alert");
                 }
                 return Ok(result);
-            }
-            catch (Exception)
-            {
-                return BadRequest("Alert inserito non esiste");
-            }
+            
+            
         }
         [HttpGet("{idMachine2}", Name = "GetIdAlertByIdMachine")]
         public ActionResult<Task<Alert>> GetLastAlertByIdMachine(int id)
@@ -108,7 +77,7 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
             var result = UnitOfWork.AlertRepository.GetAlertByIDMachine(id);
             if (result == null)
             {
-                return BadRequest("idMacchina inseistente o alert inesistenti in questa macchina");
+                return BadRequest("the machine not exists or not have alert");
             }
             else
             {
@@ -117,18 +86,12 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
         }
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public ActionResult DeleteAlert(int id)
+        public ActionResult<Alert> DeleteAlert(int id)
         {
-            try
-            {
-                UnitOfWork.AlertRepository.Delete(id);
+            
+                var alertDeleted=UnitOfWork.AlertRepository.Delete(id);
                 UnitOfWork.AlertRepository.SaveAll();
-                return Ok();
-            }
-            catch (Exception)
-            {
-                return BadRequest("Impossibile eliminare,non esiste o altro problema");
-            }
+            return Ok(alertDeleted);
             
         }
     }
