@@ -28,16 +28,40 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Repository
         {
             //Set.AsNoTracking();
             var entity = Set.SingleOrDefault(x => x.Id == id);
-            if (!entity.Equals(null))
+            if(entity is ITrackingDelete)
             {
-                entity.IsDeleted = true;
+                ((ITrackingDelete)entity).IsDeleted = true;
+                context.Entry(entity).State = EntityState.Modified;
                 return entity;
             }
-            else return null;
+            else if (entity == null)
+            {
+                return null;
+            }
+            else
+            {
+                Set.Remove(entity);
+                return entity;
+            }
+            
+            //if (!entity.Equals(null))
+            //{
+            //    entity.IsDeleted = true;
+            //    return entity;
+            //}
+            //else return null;
         }
         public IEnumerable<TEntity> GetAll()
         {
-            return Set.AsNoTracking().Where(x => x.IsDeleted == false).ToList();
+            var queryList= Set.AsNoTracking().Where(x => x.IsDeleted == false).ToList();
+            if (queryList != null)
+            {
+                return queryList;
+            }
+            else
+            {
+                return null;
+            }
 
         }
 
@@ -45,15 +69,21 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Repository
         {
             //Set.AsNoTracking();
             var result = Set.SingleOrDefault(x => x.Id == id);
-            return result;
+            if (result == null)
+            {
+                return null;
+            }
+            else
+            {
+                return result;
+            }
         }
 
         public TEntity Insert(TEntity entity)
         {
             //Set.AsNoTracking();
              Set.Add(entity);
-            return entity; 
-           
+            return entity;            
         }
 
         public TEntity Update(TEntity entityToUpdate)

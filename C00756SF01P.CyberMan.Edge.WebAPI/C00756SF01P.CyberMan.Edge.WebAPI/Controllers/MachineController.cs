@@ -22,25 +22,39 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Machine>> GetMachine()
         {
-            return Ok(UnitOfWork.MachineRepository.GetAll());
+            var machineList = UnitOfWork.MachineRepository.GetAll();
+            if (machineList == null)
+            {
+                return BadRequest("there isn't machine");
+            }
+            else
+            {
+                return Ok(machineList);
+            }
         }
 
         // GET: api/Machine/5
         [HttpGet("{id}", Name = "GetMachineById")]
-        public ActionResult<Machine> GetMachineById(int id)
+        public ActionResult<Machine> GetMchineById(int id)
         {
             var result = UnitOfWork.MachineRepository.GetByID(id);
-            if (result.IsDeleted)
+            if (result == null)
             {
-                //TODO:COMMENTO IN INGLESE
-                return BadRequest("La macchina inserita è stata eliminata e non puoi piu vederla");
+                return BadRequest("the machine insert not exists");
             }
-            return result;
+            else if(result.IsDeleted==true)
+            {
+                return BadRequest("The Machine Insert is deleted and you can't access it");
+            }
+            else
+            {
+                return Ok(result);
+            } 
         }
 
         // POST: api/Machine
         [HttpPost]
-        public ActionResult PostMachine([FromBody] Machine machine)
+        public ActionResult<Machine> PostMachine([FromBody] Machine machine)
         {
 
             var insertMachine=UnitOfWork.MachineRepository.Insert(machine);
@@ -52,7 +66,7 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
         }
         // PUT: api/Machine/5
         [HttpPut("{id}")]
-        public ActionResult PutMachine([FromBody] Machine machine)
+        public ActionResult<Machine> PutMachine([FromBody] Machine machine)
         {
             //TODO: TORNARE LA MACCHINE AGGIORNATA
             var machineUpdate=UnitOfWork.MachineRepository.Update(machine);
@@ -62,12 +76,19 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public ActionResult DeleteMachine(int id)
+        public ActionResult<Machine> DeleteMachine(int id)
         {
 
             var machineDeleted=UnitOfWork.MachineRepository.Delete(id);
-            UnitOfWork.MachineRepository.SaveAll();
-            return Ok(machineDeleted);
+            if (machineDeleted == null)
+            {
+                return BadRequest("The machine insert not exists");
+            }
+            else
+            {
+                UnitOfWork.MachineRepository.SaveAll();
+                return Ok(machineDeleted);
+            }
         }
 
     }

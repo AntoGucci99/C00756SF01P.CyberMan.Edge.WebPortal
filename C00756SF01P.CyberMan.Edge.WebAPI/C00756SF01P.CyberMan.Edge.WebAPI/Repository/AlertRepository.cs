@@ -23,19 +23,29 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Repository
 
         public async Task<List<Alert>> GetAlertByIDMachine(int id)
         {
-            var list1 = Set.Where(x => x.MachineId == id);
-            return await list1.Where(x => x.IsDeleted == false).ToListAsync();
-
+            var listAlert = Set.Where(x => x.MachineId == id);
+            if (listAlert == null)
+            {
+                return null;
+            }
+            else
+            {
+                return await listAlert.Where(x => x.IsDeleted == false).ToListAsync();
+            }
         }
         public async Task<Alert> GetLastAlertByIDMachine(int id)
         {
-            var query = from alert in Context.Set<Alert>()
-                        join machine in Context.Set<Machine>()
-                           on alert.MachineId equals machine.Id
-                        where machine.Id == id
-                        select alert;
-
-            return await query.OrderByDescending(o => o.ModifiedAt).FirstOrDefaultAsync();
+            var listAlert = Set.Where(x => x.MachineId == id && x.IsDeleted == false);
+            if (listAlert == null)
+            {
+                return null;
+            }
+            else
+            {
+               
+               return await listAlert.OrderByDescending(o => o.ModifiedAt).FirstOrDefaultAsync();
+                
+            }
         }
 
 

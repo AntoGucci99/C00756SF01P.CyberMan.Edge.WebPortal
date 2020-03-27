@@ -26,9 +26,17 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
 
 
         [HttpGet]
-        public IEnumerable<Status> GetStatues()
+        public ActionResult<IEnumerable<Status>> GetStatues()
         {
-            return UnitOfWork.StatusRepository.GetAll();
+            var statues = UnitOfWork.StatusRepository.GetAll();
+            if (statues != null)
+            {
+                return Ok(statues);
+            }
+            else
+            {
+                return BadRequest("There isn't statues");
+            }
         }
 
         // GET: api/StatusControllerr/5
@@ -36,11 +44,18 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
         public ActionResult<Status> GetByIdStatus(int id)
         {           
                 var result = UnitOfWork.StatusRepository.GetByID(id);
-                if (result.IsDeleted == true)
+                if (result == null)
                 {
-                    return BadRequest("lo status inserit is deleted and you can access it");
+                    return BadRequest("The status not exists");
                 }
-                return result;
+                else if (result.IsDeleted == true)
+                {
+                    return BadRequest("The status insert is deleted and you can access it");
+                }
+                else
+                {
+                    return Ok(result);
+                }       
         }
 
         [HttpGet("machineid/{id}", Name = "GetStatusByMachineID")]
@@ -48,9 +63,9 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
         public async Task<ActionResult<List<Status>>> GetStatusByIdMachine(int id)
         {
             var result = await UnitOfWork.StatusRepository.GetStatusByIDMachine(id);
-            if (result == null)
+            if (result.Count==0)
             {
-                return BadRequest("idMacchina not exists or not have statuses");
+                return BadRequest("IdMacchina not exists or not have statuses");
             }
             else
             {
@@ -60,12 +75,12 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
         }
         [HttpGet("laststatudbymachineid/{id}", Name = "GetLastStatusByMachineId")]
         //metodo con await e async
-        public ActionResult<Task<Status>> GetLastStatusByIDMachine(int id)
+        public async Task<ActionResult<Task<Status>>> GetLastStatusByIDMachineAsync(int id)
         {
-            var result = UnitOfWork.StatusRepository.GetLastStatusByIDMachine(id);
-            if (result == null)
+            var result = await UnitOfWork.StatusRepository.GetLastStatusByIDMachine(id);
+            if (result==null)
             {
-                return BadRequest("idMacchina not exists or not have status");
+                return BadRequest("IdMacchina not exists or not have status");
             }
             else
             {
@@ -76,7 +91,16 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
         [HttpGet("StatusName")]
         public async Task<ActionResult<List<string>>> GetStatusName()
         {
-            return Ok(await UnitOfWork.StatusRepository.GetNameStatus());
+            var statusName = await UnitOfWork.StatusRepository.GetNameStatus();
+            if (statusName != null)
+            {
+                return Ok(statusName);
+            }
+            else
+            {
+                return BadRequest("there isn't statues");
+            }
+            
         }
         // POST: api/StatusControllerr
         [HttpPost]
@@ -102,8 +126,16 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
         public ActionResult<Status> DeleteStatus(int id)
         {
             var statusDeleted = UnitOfWork.StatusRepository.Delete(id);
-            UnitOfWork.StatusRepository.SaveAll();
-            return Ok(statusDeleted);
+            if (statusDeleted == null)
+            {
+                return BadRequest("Status insert not exists");
+            }
+            else
+            {
+                UnitOfWork.StatusRepository.SaveAll();
+                return Ok(statusDeleted);
+            }
+            
 
 
         }

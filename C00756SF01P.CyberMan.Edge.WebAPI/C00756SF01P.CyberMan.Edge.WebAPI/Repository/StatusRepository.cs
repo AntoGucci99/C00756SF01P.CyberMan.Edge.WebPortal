@@ -23,26 +23,43 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Repository
         {
             //list1 non è un nome parlante
             var statusList = Set.Where(x => x.MachineId == id);
-            return await statusList.Where(x => x.IsDeleted== false).ToListAsync();
+            if (statusList == null)
+            {
+                return  null;
+            }
+            else
+            {
+                return await statusList.Where(x => x.IsDeleted == false).ToListAsync();
+            }
+            
         }
 
 
         public  async Task<List<string>> GetNameStatus()
         {
             var query = await this.Context.Statuses.Select(p => p.StatusName)?.Distinct()?.ToListAsync();
-            return query;    
-               
+            if (query == null)
+            {
+                return null;
+            }
+            else
+            {
+                return query;
+            }   
         }
-
         public async Task<Status> GetLastStatusByIDMachine(int id)
         {
-            var query =  from status in Context.Set<Status>() 
-                         join machine in Context.Set<Machine>() 
-                            on status.MachineId equals machine.Id 
-                         where machine.Id == id    
-                         select status;
+            var listStatus = Set.Where(x => x.MachineId == id && x.IsDeleted == false);
+            if (listStatus == null)
+            {
+                return null;
+            }
+            else
+            {
 
-            return await query.OrderByDescending(o => o.ModifiedAt).FirstOrDefaultAsync();
+                return await listStatus.OrderByDescending(o => o.ModifiedAt).FirstOrDefaultAsync();
+
+            }
         }
         //testjoin
         //public void Test()

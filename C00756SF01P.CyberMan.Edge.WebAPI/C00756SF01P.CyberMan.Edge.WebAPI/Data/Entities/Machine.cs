@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace C00756SF01P.CyberMan.Edge.WebAPI.Data.Entities
 {
-    public class Machine : EntityBase
+    public class Machine : EntityBase/*, ITrackingDelete*/
     {
         [Required]
         public string MachineName { get; set; }
@@ -17,7 +17,6 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Data.Entities
         public DateTime DateInsert { get; set; }
         public ICollection<Alert> Alerts { get; set; }
         public ICollection<Status> Status { get; set; }
-
-
+        //public bool IsDeleted { get; set; }
     }
 }

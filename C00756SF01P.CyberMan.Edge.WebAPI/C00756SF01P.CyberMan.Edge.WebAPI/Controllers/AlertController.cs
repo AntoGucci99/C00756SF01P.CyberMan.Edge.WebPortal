@@ -23,20 +23,63 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
         public ActionResult<Task<IEnumerable<Alert>>> GetAlerts()
         {
             var alertList = UnitOfWork.AlertRepository.GetAll();
-            return Ok(alertList);
+            if (alertList == null)
+            {
+                return BadRequest("There is no alert");
+            }
+            else
+            {
+                return Ok(alertList);
+            }
+            
         }
 
         // GET: api/Alert/5
         [HttpGet("{id}", Name = "GetByIdAlert")]
         public ActionResult<Alert> GetByIdAlert(int id)
         {
-            
+
             var result = UnitOfWork.AlertRepository.GetByID(id);
-            if (result.IsDeleted == true)
+            if (result == null)
             {
-               return BadRequest("Alert inserit is deleted and you can't access it");
+                return BadRequest("Alert inserit not eists");
             }
-            return Ok(result);  
+            else if (result.IsDeleted == true)
+            {
+                return BadRequest("Alert inserit is deleted and you can't access it");
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+        [HttpGet("machineid/{id}", Name = "GetAlertByMachineID")]
+        public async Task<ActionResult<List<Alert>>> GetAlertByIdMachine(int id)
+        {
+            var result = await UnitOfWork.AlertRepository.GetAlertByIDMachine(id);
+            if (result.Count==0)
+            {
+                return BadRequest("IdMacchina not exists or not have alerts");
+            }
+            else
+            {
+                return Ok(result);
+            }
+
+        }
+        [HttpGet("lastalertbymachineid/{id}", Name = "GetLastAlertByMachineId")]
+        public async Task<ActionResult<Task<Alert>>> GetLastAlertByIDMachineAsync(int id)
+        {
+            var result = await UnitOfWork.AlertRepository.GetLastAlertByIDMachine(id);
+            if (result == null)
+            {
+               return BadRequest("IdMacchina not exists or not have alert");
+            }
+            else
+            {
+                return Ok(result);
+            }
+
         }
 
         // POST: api/Alert
@@ -57,42 +100,20 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
              return Ok(alertUpdate);
 
         }
-        // GET: api/Alert/8
-        [HttpGet("{idMachine}", Name = "GetByIdAlertByIdMachine")]
-        public  ActionResult<Task<List<Alert>>> GetAlertByIdMachine(int id)
-        {
-            
-                var result = UnitOfWork.AlertRepository.GetByID(id);
-                if (result.IsDeleted == true)
-                {
-                    return BadRequest("the machine not exists or not have alert");
-                }
-                return Ok(result);
-            
-            
-        }
-        [HttpGet("{idMachine2}", Name = "GetIdAlertByIdMachine")]
-        public ActionResult<Task<Alert>> GetLastAlertByIdMachine(int id)
-        {
-            var result = UnitOfWork.AlertRepository.GetAlertByIDMachine(id);
-            if (result == null)
-            {
-                return BadRequest("the machine not exists or not have alert");
-            }
-            else
-            {
-                return Ok(result);
-            }
-        }
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public ActionResult<Alert> DeleteAlert(int id)
-        {
-            
-                var alertDeleted=UnitOfWork.AlertRepository.Delete(id);
+        {  
+            var alertDeleted=UnitOfWork.AlertRepository.Delete(id);
+            if (alertDeleted == null)
+            {
+                return BadRequest("Alert insert not exists");
+            }
+            else
+            {
                 UnitOfWork.AlertRepository.SaveAll();
-            return Ok(alertDeleted);
-            
+                return Ok(alertDeleted);
+            }
         }
     }
 }
