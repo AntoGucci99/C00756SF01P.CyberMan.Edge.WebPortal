@@ -68,7 +68,7 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Repository
         public TEntity GetByID(int id)
         {
             //Set.AsNoTracking();
-            var result = Set.SingleOrDefault(x => x.Id == id);
+            var result = Set.SingleOrDefault(x => x.Id == id && x.IsDeleted==false);
             if (result == null)
             {
                 return null;
