@@ -46,7 +46,6 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
             var result = await UnitOfWork.AlertRepository.GetLastAlertByIDMachine(id);
             return Ok(result);
         }
-
         // POST: api/Alert
         [HttpPost]
         public ActionResult<Alert> PostAlert([FromBody] Alert alert)
@@ -55,7 +54,6 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
             UnitOfWork.AlertRepository.SaveAll();
             return Ok(alertInsert);
         }
-
         // PUT: api/Alert/5
         [HttpPut("{id}")]
         public ActionResult<Alert> PutAlert([FromBody] Alert alert)
@@ -63,13 +61,11 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
             var alertUpdate = UnitOfWork.AlertRepository.Update(alert);
             UnitOfWork.AlertRepository.SaveAll();
             return Ok(alertUpdate);
-
         }
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public ActionResult<Alert> DeleteAlert(int id)
         {
-            //TODO:CHECK 31/03
             var alertDeleted = UnitOfWork.AlertRepository.Delete(id);
             if (alertDeleted == null)
             {

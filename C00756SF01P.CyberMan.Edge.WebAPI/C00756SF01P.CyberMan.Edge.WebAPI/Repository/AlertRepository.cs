@@ -44,6 +44,7 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Repository
             {
                
                return await listAlert.OrderByDescending(o => o.ModifiedAt).FirstOrDefaultAsync();
+                //return await listAlert.MaxAsync(o=>o.ModifyAt);
                 
             }
         }

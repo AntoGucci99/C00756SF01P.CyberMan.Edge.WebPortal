@@ -65,8 +65,7 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
         public async Task<ActionResult<List<string>>> GetStatusName()
         {
             //TODO:CHECK 31/03
-            var statusName = await UnitOfWork.StatusRepository.GetNameStatus();
-            return Ok(statusName);
+            return  await UnitOfWork.StatusRepository.GetNameStatus();
         }
         // POST: api/StatusControllerr
         [HttpPost]
