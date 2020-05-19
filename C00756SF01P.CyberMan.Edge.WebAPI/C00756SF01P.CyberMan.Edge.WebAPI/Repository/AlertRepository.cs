@@ -23,15 +23,21 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Repository
 
         public async Task<List<Alert>> GetAlertByIDMachine(int id)
         {
-            var listAlert = Set.Where(x => x.MachineId == id);
+            var listAlert = Set.Where(x => x.MachineId == id && x.IsDeleted == false);
             if (listAlert == null)
             {
                 return null;
             }
             else
             {
-                return await listAlert.Where(x => x.IsDeleted == false).ToListAsync();
+                return await listAlert.Where(x => x.IsDeleted == false).ToListAsync(); 
             }
+            
+            //else
+            //{
+
+            //    return await listAlert.Where(x => x.IsDeleted == false).ToListAsync();
+            //}
         }
         public async Task<Alert> GetLastAlertByIDMachine(int id)
         {

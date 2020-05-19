@@ -28,7 +28,7 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Status>> GetStatues()
         {
-            //TODO:CHECK 31/03, PLURALE DI STATUS E' SEMPRE STATUS
+            
             var status = UnitOfWork.StatusRepository.GetAll();
             return Ok(status);
         }
@@ -38,7 +38,7 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
         public ActionResult<Status> GetByIdStatus(int id)
         {
             var result = UnitOfWork.StatusRepository.GetByID(id);
-            if (result.IsDeleted == true)
+            if (result== null)
             {
                 return BadRequest("The status insert is deleted and you can access it");
             }
@@ -46,12 +46,19 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
         }
 
         [HttpGet("machineid/{id}", Name = "GetStatusByMachineID")]
-        //metodo con await e async
         public async Task<ActionResult<List<Status>>> GetStatusByIdMachine(int id)
         {
             //TODO:CHECK 31/03
             var result = await UnitOfWork.StatusRepository.GetStatusByIDMachine(id);
-            return Ok(result);
+            if (result == null)
+            {
+                return BadRequest("The machine insert not exists or not have status");
+            }
+            else
+            {
+                return Ok(result);
+            }
+            
         }
         [HttpGet("laststatudbymachineid/{id}", Name = "GetLastStatusByMachineId")]
         //metodo con await e async
@@ -59,7 +66,16 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
         {
             //TODO:CHECK 31/03
             var result = await UnitOfWork.StatusRepository.GetLastStatusByIDMachine(id);
-            return Ok(result);
+            if (result == null)
+            {
+                return BadRequest("The machine insert not exists or not have status");
+            }
+            else
+            {
+
+                return Ok(result);
+            }
+
         }
         [HttpGet("StatusName")]
         public async Task<ActionResult<List<string>>> GetStatusName()
@@ -80,9 +96,18 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
         [HttpPut("{id}")]
         public ActionResult<Status> PutStatus([FromBody] Status status)
         {
-            var statusUpdate = UnitOfWork.StatusRepository.Update(status);
-            UnitOfWork.StatusRepository.SaveAll();
-            return Ok(statusUpdate);
+            var result = UnitOfWork.StatusRepository.GetByID(status.Id);
+            if (result == null)
+            {
+                return BadRequest("The Status insert not exists or id deleted");
+            }
+            else
+            {
+                var statusUpdate = UnitOfWork.StatusRepository.Update(status);
+                UnitOfWork.StatusRepository.SaveAll();
+                return Ok(statusUpdate);
+            }
+            
         }
 
         // DELETE: api/ApiWithActions/5

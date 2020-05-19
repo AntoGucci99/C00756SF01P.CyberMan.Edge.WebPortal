@@ -32,7 +32,7 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
         {
             //TODO:CHECK 31/03
             var result = UnitOfWork.MachineRepository.GetByID(id);
-            if (result.IsDeleted == true)
+            if (result == null || result.IsDeleted == true  )
             {
                 return BadRequest("The Machine Insert is deleted and you can't access it");
             }
@@ -51,9 +51,18 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
         [HttpPut("{id}")]
         public ActionResult<Machine> PutMachine([FromBody] Machine machine)
         {
-            var machineUpdate = UnitOfWork.MachineRepository.Update(machine);
-            UnitOfWork.MachineRepository.SaveAll();
-            return Ok(machineUpdate);
+            var result = UnitOfWork.MachineRepository.GetByID(machine.Id);
+            if (result == null)
+            {
+                return BadRequest("The Machine Insert is deleted or not exists and you can't access it");
+            }
+            else
+            {
+                var machineUpdate = UnitOfWork.MachineRepository.Update(machine);
+                UnitOfWork.MachineRepository.SaveAll();
+                return Ok(machineUpdate);
+            }
+            
         }
 
         // DELETE: api/ApiWithActions/5

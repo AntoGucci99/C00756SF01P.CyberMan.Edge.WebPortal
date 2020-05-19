@@ -32,19 +32,42 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
         public ActionResult<Alert> GetByIdAlert(int id)
         {
             var result = UnitOfWork.AlertRepository.GetByID(id);
-            return Ok(result);
+            if (result == null)
+            {
+                return BadRequest("The alert not exists");
+            }
+            else
+            {
+                return Ok(result);
+            }
+            
         }
         [HttpGet("machineid/{id}", Name = "GetAlertByMachineID")]
         public async Task<ActionResult<List<Alert>>> GetAlertByIdMachine(int id)
         {
             var result = await UnitOfWork.AlertRepository.GetAlertByIDMachine(id);
-            return Ok(result);
+            if (result.Count().Equals(0) || result.Equals(null))
+            {
+                return BadRequest("Machine insert not Exist or not have alert");
+            }
+            else
+            {
+                return Ok(result);
+            }
+            
         }
         [HttpGet("lastalertbymachineid/{id}", Name = "GetLastAlertByMachineId")]
         public async Task<ActionResult<Task<Alert>>> GetLastAlertByIDMachineAsync(int id)
         {
             var result = await UnitOfWork.AlertRepository.GetLastAlertByIDMachine(id);
-            return Ok(result);
+            if (result == null)
+            {
+                return BadRequest("Machine insert not Exist or not have alert");
+            }
+            else
+            {
+                return Ok(result);
+            }
         }
         // POST: api/Alert
         [HttpPost]
@@ -58,9 +81,18 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Controllers
         [HttpPut("{id}")]
         public ActionResult<Alert> PutAlert([FromBody] Alert alert)
         {
-            var alertUpdate = UnitOfWork.AlertRepository.Update(alert);
-            UnitOfWork.AlertRepository.SaveAll();
-            return Ok(alertUpdate);
+            var result = UnitOfWork.AlertRepository.GetByID(alert.Id);
+            if (result == null)
+            {
+                return BadRequest("The Alert is deleted or not extsts");
+            }
+            else
+            {
+                var alertUpdate = UnitOfWork.AlertRepository.Update(alert);
+                UnitOfWork.AlertRepository.SaveAll();
+                return Ok(alertUpdate);
+            }
+           
         }
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]

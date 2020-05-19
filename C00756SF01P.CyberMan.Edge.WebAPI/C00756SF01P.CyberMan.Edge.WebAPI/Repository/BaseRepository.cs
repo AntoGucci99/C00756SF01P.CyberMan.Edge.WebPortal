@@ -89,7 +89,8 @@ namespace C00756SF01P.CyberMan.Edge.WebAPI.Repository
         public TEntity Update(TEntity entityToUpdate)
         {
             //Set.AsNoTracking();
-            Set.Update(entityToUpdate);
+            var result=Set.Update(entityToUpdate);
+            if (result == null)
             Set.SingleOrDefault(x => x.Id == entityToUpdate.Id).ModifiedAt = DateTime.Now;
             return entityToUpdate;
         }
